@@ -95,6 +95,7 @@ DOM = {
     editShortcutSection: document.getElementById("editShortcutSection")
 };
 
+//test
 if (DOM.toggleFolders) {
     DOM.toggleFolders.addEventListener("click", toggleFoldersVisibility);
 }
