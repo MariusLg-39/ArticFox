@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "ArticFox Extension",
+  "version": "1.5",
+  "description": "ArticFox Home Page for Firefox",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [],
+  "background": {
+    "scripts": ["script.js"]
+  },
+  "icons": {
+    "128": "icon.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "articfox@example.com",
+      "strict_min_version": "58.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}
