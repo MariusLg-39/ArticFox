@@ -106,7 +106,9 @@ const AVAILABLE_ICONS = [
     "file-text", "github", "globe", "terminal", "code", 
     "hash", "layers", "cpu", "database", "message-square",
     "clapperboard", "gamepad-2", "headphones", "camera", "bookmark",
-    "clock", "search", "gauge", "book", "settings"
+    "clock", "search", "gauge", "book", "settings", "school", "message-circle-more",
+    "bot", "shopping-cart", "gamepad", "circuit-board", "cuboid", "library-big",
+    "download", "puzzle", "square-library", "boxes", "monitor", "hammer"
 ];
 
 let foldersData = JSON.parse(localStorage.getItem("foldersData")) || [];
@@ -178,6 +180,20 @@ function closeShortcuts() {
         DOM.shortcutsContainer.classList.remove("animate-out");
         selectedFolderId = null;
     }, 200);
+}
+
+// Fonction pour fermer tous les menus latéraux et désactiver les boutons
+function closeAllMenus() {
+    const menus = [DOM.settingsMenu, DOM.dataMenu, DOM.BgMenu, DOM.alignMenu];
+    const buttons = [DOM.settingsBtn, DOM.dataBtn, DOM.BgBtn, DOM.alignBtn];
+
+    menus.forEach(menu => {
+        if (menu) menu.classList.add("hidden");
+    });
+
+    buttons.forEach(btn => {
+        if (btn) btn.classList.remove("active");
+    });
 }
 
 // --- RENDER ICON PICKERS ---
@@ -259,9 +275,8 @@ function renderFolders() {
 function renderShortcuts(folder) {
     if (!folder) return;
     
+    // On vide et on reconstruit le contenu
     DOM.shortcutsList.innerHTML = "";
-    DOM.shortcutsList.style.opacity = "0";
-
     const fragment = document.createDocumentFragment();
     
     folder.shortcuts.forEach((shortcut, index) => {
@@ -270,7 +285,6 @@ function renderShortcuts(folder) {
         a.href = shortcut.link || "#";
         a.target = "_blank";
         a.dataset.index = index;
-        a.draggable = true;
         
         const iconHtml = shortcut.icon 
             ? `<img src="${shortcut.icon}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">` 
@@ -284,27 +298,21 @@ function renderShortcuts(folder) {
         fragment.appendChild(a);
     });
 
+    // Bouton "+"
     const addBtn = document.createElement("div");
     addBtn.className = "shortcut placeholder";
     addBtn.innerHTML = `<i data-lucide="plus" style="width:24px; height:24px;"></i>`; 
-    addBtn.onclick = (e) => {
-        e.stopPropagation();
-        DOM.shortcutModal.classList.remove("hidden");
-    };
+    addBtn.onclick = (e) => { e.stopPropagation(); DOM.shortcutModal.classList.remove("hidden"); };
     fragment.appendChild(addBtn);
 
     DOM.shortcutsList.appendChild(fragment);
     
+    // Calcul des colonnes
     const columns = Math.min(folder.shortcuts.length + 1, 7);
     DOM.shortcutsList.style.gridTemplateColumns = `repeat(${columns}, 80px)`;
     
     initAllLucideIcons();
-
-    requestAnimationFrame(() => {
-        DOM.shortcutsList.style.opacity = "1";
-    });
-
-    setTimeout(positionShortcuts, 0);
+    positionShortcuts(); // On repositionne immédiatement
 }
 
 // --- FOLDER ALIGNMENT ---
@@ -312,19 +320,26 @@ function applyFoldersAlign(align) {
     const folders = DOM.foldersRow;
     if (!folders) return;
 
-    const firstChild = folders.firstElementChild;
-    const lastChild = folders.lastElementChild;
+    // On remet les marges à zéro pour éviter les conflits
+    const children = folders.children;
+    for(let child of children) {
+        child.style.marginLeft = "0";
+        child.style.marginRight = "0";
+    }
 
-    if (firstChild) firstChild.style.marginLeft = "0";
-    if (lastChild) lastChild.style.marginRight = "0";
-
+    // On change l'alignement de la grille/flex
     if (align === "left") {
-        if (lastChild) lastChild.style.marginRight = "auto";
+        folders.style.justifyContent = "flex-start";
+        folders.style.marginLeft = "40px"; // Marge de sécurité à gauche
+        folders.style.marginRight = "auto";
     } else if (align === "right") {
-        if (firstChild) firstChild.style.marginLeft = "auto";
+        folders.style.justifyContent = "flex-end";
+        folders.style.marginRight = "40px";
+        folders.style.marginLeft = "auto";
     } else {
-        if (firstChild) firstChild.style.marginLeft = "auto";
-        if (lastChild) lastChild.style.marginRight = "auto";
+        folders.style.justifyContent = "center";
+        folders.style.marginLeft = "auto";
+        folders.style.marginRight = "auto";
     }
 }
 
@@ -382,16 +397,30 @@ DOM.foldersRow.onclick = e => {
 
     if (e.target.dataset.action === "edit-folder") {
         openEditModal("folder", folder);
-    } else {
-        if (selectedFolderId === id) {
-            closeShortcuts();
-        } else {
+        return;
+    }
+
+    // Cas 1 : On clique sur le dossier déjà ouvert (on ferme)
+    if (selectedFolderId === id) {
+        closeShortcuts();
+        return;
+    }
+
+    // Cas 2 : Un dossier est déjà ouvert, on fait une transition fluide
+    if (selectedFolderId !== null && !DOM.shortcutsContainer.classList.contains("hidden")) {
+        DOM.shortcutsList.classList.add("switching"); // Commence le fondu de sortie
+        
+        setTimeout(() => {
             selectedFolderId = id;
-            DOM.shortcutsContainer.classList.remove("hidden");
-            DOM.shortcutsContainer.classList.remove("animate-out");
-            DOM.shortcutsContainer.classList.add("animate-in");
             renderShortcuts(folder);
-        }
+            DOM.shortcutsList.classList.remove("switching"); // Fin du fondu (retour à l'opacité 1)
+        }, 150); // Ce délai doit correspondre à la vitesse du CSS (0.2s)
+    } 
+    // Cas 3 : Rien n'est ouvert, ouverture standard
+    else {
+        selectedFolderId = id;
+        renderShortcuts(folder);
+        DOM.shortcutsContainer.classList.remove("hidden");
     }
 };
 
@@ -434,27 +463,42 @@ DOM.toggleBtn.onclick = () => {
 
 DOM.settingsBtn.onclick = (e) => {
     e.stopPropagation();
-    const isVisible = !DOM.settingsMenu.classList.toggle("hidden");
-    DOM.settingsBtn.classList.toggle("active", isVisible);
+    const isAlreadyVisible = !DOM.settingsMenu.classList.contains("hidden");
+    closeAllMenus(); // On ferme tout d'abord
+    if (!isAlreadyVisible) {
+        DOM.settingsMenu.classList.remove("hidden");
+        DOM.settingsBtn.classList.add("active");
+    }
 };
 
 DOM.dataBtn.onclick = (e) => {
     e.stopPropagation();
-    const isVisible = !DOM.dataMenu.classList.toggle("hidden");
-    DOM.dataBtn.classList.toggle("active", isVisible);
+    const isAlreadyVisible = !DOM.dataMenu.classList.contains("hidden");
+    closeAllMenus();
+    if (!isAlreadyVisible) {
+        DOM.dataMenu.classList.remove("hidden");
+        DOM.dataBtn.classList.add("active");
+    }
 };
 
 DOM.BgBtn.onclick = (e) => {
     e.stopPropagation();
-    const isVisible = !DOM.BgMenu.classList.toggle("hidden");
-    DOM.BgBtn.classList.toggle("active", isVisible);
+    const isAlreadyVisible = !DOM.BgMenu.classList.contains("hidden");
+    closeAllMenus();
+    if (!isAlreadyVisible) {
+        DOM.BgMenu.classList.remove("hidden");
+        DOM.BgBtn.classList.add("active");
+    }
 };
-
 
 DOM.alignBtn.onclick = (e) => {
     e.stopPropagation();
-    const isVisible = !DOM.alignMenu.classList.toggle("hidden");
-    DOM.alignBtn.classList.toggle("active", isVisible);
+    const isAlreadyVisible = !DOM.alignMenu.classList.contains("hidden");
+    closeAllMenus();
+    if (!isAlreadyVisible) {
+        DOM.alignMenu.classList.remove("hidden");
+        DOM.alignBtn.classList.add("active");
+    }
 };
 
 DOM.iconSearch.addEventListener("input", (e) => {
@@ -479,33 +523,22 @@ if (DOM.editIconSearch) {
     });
 }
 
-document.onclick = (e) => {
-    if (!DOM.settingsMenu.contains(e.target) && e.target !== DOM.settingsBtn) {
-        DOM.settingsMenu.classList.add("hidden");
-        DOM.settingsBtn.classList.remove("active");
-    }
-};
+document.addEventListener("click", (e) => {
+    // Liste des menus et de leurs boutons respectifs
+    const menuConfigs = [
+        { menu: DOM.settingsMenu, btn: DOM.settingsBtn },
+        { menu: DOM.dataMenu, btn: DOM.dataBtn },
+        { menu: DOM.BgMenu, btn: DOM.BgBtn },
+        { menu: DOM.alignMenu, btn: DOM.alignBtn }
+    ];
 
-document.onclick = (e) => {
-    if (!DOM.dataMenu.contains(e.target) && e.target !== DOM.dataBtn) {
-        DOM.dataMenu.classList.add("hidden");
-        DOM.dataBtn.classList.remove("active");
-    }
-};
-
-document.onclick = (e) => {
-    if (!DOM.BgMenu.contains(e.target) && e.target !== DOM.BgBtn) {
-        DOM.BgMenu.classList.add("hidden");
-        DOM.BgBtn.classList.remove("active");
-    }
-};
-
-document.onclick = (e) => {
-    if (!DOM.alignMenu.contains(e.target) && e.target !== DOM.alignBtn) {
-        DOM.alignMenu.classList.add("hidden");
-        DOM.alignBtn.classList.remove("active");
-    }
-};
+    menuConfigs.forEach(config => {
+        if (config.menu && !config.menu.contains(e.target) && e.target !== config.btn) {
+            config.menu.classList.add("hidden");
+            if (config.btn) config.btn.classList.remove("active");
+        }
+    });
+});
 
 DOM.settingsMenu.querySelectorAll(".align-option").forEach(opt => {
     opt.onclick = (e) => {
@@ -634,12 +667,43 @@ document.querySelectorAll(".cancel-btn").forEach(btn => {
 });
 
 document.getElementById("exportBtn").onclick = () => {
-    const blob = new Blob([JSON.stringify(foldersData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); 
-    a.href = url; 
-    a.download = "articfox_backup.json"; 
-    a.click();
+    try {
+        // Validate data exists
+        if (!foldersData || !Array.isArray(foldersData)) {
+            alert("No data to export");
+            return;
+        }
+        
+        // Create clean export data (remove any circular references or undefined values)
+        const cleanData = foldersData.map(folder => ({
+            id: folder.id || Date.now().toString(),
+            name: folder.name || "Unnamed",
+            icon: folder.icon || "folder",
+            shortcuts: (folder.shortcuts || []).map(s => ({
+                name: s.name || "Unnamed",
+                link: s.link || "#",
+                icon: s.icon || null
+            }))
+        }));
+        
+        const blob = new Blob([JSON.stringify(cleanData, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a"); 
+        a.href = url; 
+        a.download = "articfox_backup_" + new Date().toISOString().slice(0,10) + ".json";
+        
+        // Required for Firefox to trigger download
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Clean up the object URL after a delay
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        
+    } catch (err) {
+        console.error("Export failed:", err);
+        alert("Export failed: " + err.message);
+    }
 };
 
 document.getElementById("importBtn").onclick = () => document.getElementById("importInput").click();
@@ -650,15 +714,56 @@ document.getElementById("importInput").onchange = e => {
     reader.onload = ev => {
         try {
             const data = JSON.parse(ev.target.result);
-            if (Array.isArray(data) && confirm("Overwrite current data?")) { 
-                foldersData = data; 
-                saveData(); 
-                renderFolders(); 
+            
+            // Validate it's an array
+            if (!Array.isArray(data)) {
+                alert("Invalid file: must be a JSON array");
+                return;
             }
-        } catch (err) { 
-            alert("Invalid file"); 
+            
+            // Validate and clean each folder
+            const validFolders = [];
+            for (const folder of data) {
+                if (!folder || typeof folder !== 'object') continue;
+                if (!folder.id || !folder.name) continue;
+                
+                // Ensure shortcuts is an array
+                const shortcuts = Array.isArray(folder.shortcuts) ? folder.shortcuts : [];
+                
+                // Clean shortcuts
+                const validShortcuts = shortcuts.filter(s => s && s.name).map(s => ({
+                    name: s.name,
+                    link: s.link || '#',
+                    icon: s.icon || getFavicon(s.link) || null
+                }));
+                
+                validFolders.push({
+                    id: String(folder.id),
+                    name: String(folder.name),
+                    icon: folder.icon || 'folder',
+                    shortcuts: validShortcuts
+                });
+            }
+            
+            if (validFolders.length === 0) {
+                alert("No valid folders found in file");
+                return;
+            }
+            
+            if (confirm(`Import ${validFolders.length} folder(s)?`)) {
+                foldersData = validFolders;
+                saveData();
+                renderFolders();
+                // Re-init icons after render
+                if (window.lucide) lucide.createIcons();
+                closeShortcuts();
+                selectedFolderId = null;
+            }
+        } catch (err) {
+            alert("Invalid JSON file: " + err.message);
         }
     };
+    reader.onerror = () => alert("Error reading file");
     reader.readAsText(file);
 };
 
@@ -804,8 +909,15 @@ function fetchGoogleSuggestions(query) {
     });
 }
 
+
+
 const ICON_SEARCH = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`;
 const ICON_CLOCK = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+
+const SEARCH_ICONS = {
+    SEARCH: ICON_SEARCH,
+    CLOCK: ICON_CLOCK
+};
 
 async function showSuggestions(val) {
     const query = val.toLowerCase().trim();
@@ -834,15 +946,21 @@ async function showSuggestions(val) {
                 const div = document.createElement("div");
                 div.className = "suggestion-item";
                 div.innerHTML = `
-                    <span class="suggestion-icon">${sugg.type === 'history' ? ICON_CLOCK : ICON_SEARCH}</span>
+                    <span class="suggestion-icon">${sugg.type === 'history' ? SEARCH_ICONS.CLOCK : SEARCH_ICONS.SEARCH}</span>
                     <span class="suggestion-text">${sugg.text}</span>
                 `;
-                div.onclick = () => {
+
+                // Fixed click handler - properly scoped
+                div.onclick = (e) => {
+                    e.preventDefault();
                     DOM.searchInput.value = sugg.text;
                     saveSearch(sugg.text);
-                    DOM.searchForm.dispatchEvent(new Event('submit'));
-                    hideSearchSuggestions();
+                    
+                    // Get selected engine URL and redirect
+                    const engineUrl = DOM.engineSelect.value;
+                    window.location.href = engineUrl + encodeURIComponent(sugg.text);
                 };
+
                 DOM.searchSuggestions.appendChild(div);
             });
             

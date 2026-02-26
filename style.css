@@ -138,17 +138,21 @@ header {
 
 /* --- GRILLE DE DOSSIERS --- */
 .folders-row {
-    display: flex;
-    justify-content: center; /* Par défaut au centre */
+    display: grid;
+    /* Crée 7 colonnes de 80px (la taille de tes dossiers) */
+    grid-template-columns: repeat(7, 80px); 
+    /* Centre la grille horizontalement */
+    justify-content: center; 
     gap: 15px;
     position: fixed;
     top: 150px;
     left: 0;
     right: 0;
-    width: 100%;
-    padding: 0 40px;
-    pointer-events: none; /* Ne bloque pas le clic sur le fond */
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: fit-content; /* S'adapte au contenu */
+    margin: 0 auto;    /* Centre le bloc sur la page */
+    padding: 20px 40px;
+    pointer-events: none;
+    transition: all 0.5s ease;
 }
 
 .folder, #addFolder {
@@ -226,6 +230,7 @@ header {
     opacity: 1;
     transform: translateY(0);
     visibility: visible;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
 }
 
 #shortcutsContainer.hidden {
@@ -236,21 +241,27 @@ header {
     pointer-events: none;
 }
 
+/* Modifiez cette partie dans votre style.css */
 .shortcuts-list {
     display: grid;
     gap: 10px;
     padding: 15px;
-    /* Couleur identique aux dossiers avec transparence */
     background-color: rgba(76, 86, 106, 0.6); 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    
     border-radius: 12px;
     border: 1px solid rgba(216, 222, 233, 0.1);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 
-    /* On applique l'animation ici */
-    animation: fadeIn 0.3s ease-out;
+    /* REMPLACEZ l'animation par une transition fluide */
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    opacity: 1;
+}
+
+/* État quand on change de dossier */
+.shortcuts-list.switching {
+    opacity: 0;
+    transform: translateY(5px);
 }
 
 /* --- ANIMATION FADE-IN --- */
