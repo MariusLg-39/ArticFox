@@ -1,0 +1,132 @@
+/* --- SIDEBAR --- */
+#rightSidebar {
+    position: fixed;
+    right: 15px;
+    top: 15px;
+    height: calc(100vh - 30px);
+    width: 50px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-between;
+    padding: 20px 0;
+    background: var(--nord3);
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    border: 1px solid rgba(216, 222, 233, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-top, .sidebar-bottom {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar-btn, #toggleFolders, #settingsBtn {
+    width: 40px !important;
+    height: 40px !important;
+    margin: 1px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: var(--nord1) !important;
+    border: 1px solid var(--nord3) !important;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0 !important;
+    transition: all 0.2s ease;
+    color: var(--nord4);
+}
+
+#rightSidebar svg {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    stroke: #d8dee9 !important;
+    stroke-width: 2px !important;
+    display: block !important;
+}
+
+.sidebar-btn:hover, #toggleFolders:hover, #settingsBtn:hover {
+    background: var(--nord2) !important;
+    border-color: var(--nord8) !important;
+}
+
+.sidebar-btn svg, #settingsBtn svg, #toggleFolders svg {
+    width: 18px;
+    height: 18px;
+    color: var(--nord4);
+    display: block;
+}
+
+.sidebar-btn.active, #settingsBtn.active, #toggleFolders.active {
+    border-color: var(--nord8);
+}
+
+/* --- SIDE MENUS --- */
+.side-menu {
+    position: fixed;
+    right: 75px;
+    background: var(--nord3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(216, 222, 233, 0.1);
+    z-index: 1002;
+    box-shadow: -10px 10px 30px rgba(0,0,0,0.4);
+    width: 250px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.side-menu.hidden {
+    display: block !important;
+    opacity: 0;
+    transform: translateX(20px);
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#settingsMenu { bottom: 20px; }
+#dataMenu { bottom: 120px; }
+#alignMenu { bottom: 170px; }
+#BgMenu { bottom: 220px; }
+
+.align-option {
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.align-option:hover {
+    background: var(--nord2);
+}
+
+.side-menu button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px;
+    background: var(--nord2);
+    color: var(--nord4);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Fira Code', monospace;
+}
+
+.side-menu button:hover {
+    background: var(--nord8);
+    color: var(--nord0);
+}

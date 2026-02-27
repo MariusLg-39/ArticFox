@@ -1,0 +1,34 @@
+:root {
+    --nord0: #2e3440;
+    --nord1: #3b4252;
+    --nord2: #434c5e;
+    --nord3: rgba(76, 86, 106, 0.5);
+    --nord4: #d8dee9;
+    --nord8: #88c0d0;
+    --nord11: #bf616a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Fira Code', monospace;
+}
+
+body {
+    height: 100vh;
+    background-image: url("../bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--nord4);
+    overflow: hidden;
+}
+
+.hidden { 
+    display: none !important; 
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: var(--nord2); border-radius: 10px; }

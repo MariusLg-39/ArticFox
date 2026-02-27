@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>ArticFox</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/search.css">
     <link rel="icon" href="icon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -47,28 +50,24 @@
     </div>
 </div>
 
+<!-- Modals -->
 <div id="folderModal" class="modal hidden">
     <div class="modal-content">
         <h2>New Directory</h2>
-        
         <label for="folderName">Name:</label>
         <input type="text" id="folderName" placeholder="Ex: Work, Games...">
-        
         <div class="icon-preview-box">
             <span>Preview</span>
             <div id="iconPreview" class="big-icon-preview"></div>
         </div>
-
         <label>Filter:</label>
         <div class="search-wrapper is-modal">
             <i data-lucide="search" class="search-icon"></i>
             <input type="text" id="iconSearch" class="icon-search-input" placeholder="Filter icons...">
         </div>
-
         <div id="iconPicker" class="icon-grid"></div>
         <input type="hidden" id="selectedFolderIcon" value="folder">
-
-        <div class="modal-buttons" style="display:flex; justify-content: space-between; margin-top:15px;">
+        <div class="modal-buttons">
             <button class="cancel-btn">Cancel</button>
             <button id="createFolder" class="confirm-btn">Create</button>
         </div>
@@ -84,8 +83,7 @@
         <input type="url" id="shortcutLink" placeholder="https://example.com">
         <label for="shortcutIcon">Logo (Optional):</label>
         <input type="file" id="shortcutIcon" accept="image/*">
-        
-        <div class="modal-buttons" style="display:flex; justify-content: space-between; margin-top:15px;">
+        <div class="modal-buttons">
             <button class="cancel-btn">Cancel</button>
             <button id="createShortcut" class="confirm-btn">Add</button>
         </div>
@@ -95,36 +93,29 @@
 <div id="editModal" class="modal hidden">
     <div class="modal-content">
         <h2>Edit Element</h2>
-        
         <div class="modal-body">
             <label for="editName">Name:</label>
             <input type="text" id="editName">
-
             <div id="editFolderIconSection" class="hidden">
                 <div class="icon-preview-box">
                     <span>Preview</span>
                     <div id="editIconPreview" class="big-icon-preview"></div>
                 </div>
-
                 <label>Filter:</label>
                 <div class="search-wrapper is-modal">
                     <i data-lucide="search" class="search-icon"></i>
                     <input type="text" id="editIconSearch" class="icon-search-input" placeholder="Filter icons...">
                 </div>
-
                 <div id="editIconPicker" class="icon-grid"></div>
                 <input type="hidden" id="editSelectedIcon" value="folder">
             </div>
-
             <div id="editShortcutSection">
                 <label for="editLink" id="editLinkLabel">Link:</label>
                 <input type="url" id="editLink" placeholder="https://example.com">
-                
                 <label for="editIcon" id="editIconLabel">Change Logo:</label>
                 <input type="file" id="editIcon" accept="image/*">
             </div>
         </div>
-
         <div class="modal-footer">
             <div class="modal-buttons">
                 <button class="cancel-btn">Cancel</button>
@@ -135,47 +126,26 @@
     </div>
 </div>
 
+<!-- Sidebar -->
 <div id="rightSidebar">
     <div class="sidebar-top">
-        <button class="sidebar-btn" title="SpeedTest">
-            <i data-lucide="gauge"></i>
-        </button>
-        <button class="sidebar-btn" title="GitHub">
-            <i data-lucide="github"></i>
-        </button>
-        <button class="sidebar-btn" title="WebSite Checker">
-            <i data-lucide="signal"></i>
-        </button>
-        <button class="sidebar-btn" title="ReadList">
-            <i data-lucide="book"></i>
-        </button>
-        <button class="sidebar-btn" title="WatchList">
-            <i data-lucide="clapperboard"></i>
-        </button>
-        <button class="sidebar-btn" title="ShoppingList">
-            <i data-lucide="shopping-basket"></i>
-        </button>
-        
+        <button class="sidebar-btn" title="SpeedTest"><i data-lucide="gauge"></i></button>
+        <button class="sidebar-btn" title="GitHub"><i data-lucide="github"></i></button>
+        <button class="sidebar-btn" title="WebSite Checker"><i data-lucide="signal"></i></button>
+        <button class="sidebar-btn" title="ReadList"><i data-lucide="book"></i></button>
+        <button class="sidebar-btn" title="WatchList"><i data-lucide="clapperboard"></i></button>
+        <button class="sidebar-btn" title="ShoppingList"><i data-lucide="shopping-basket"></i></button>
     </div>
     <div class="sidebar-bottom">
-        <button class="sidebar-btn" id="BgBtn" title="Background">
-            <i data-lucide="image"></i>
-        </button>
-        <button class="sidebar-btn" id="alignBtn" title="Alignment">
-            <i data-lucide="text-align-center"></i>
-        </button>
-        <button class="sidebar-btn" id="dataBtn" title="Data">
-            <i data-lucide="database"></i>
-        </button>
-        <button id="toggleFolders" title="Display">
-            <i id="toggleIcon" data-lucide="folder"></i>
-        </button>
-        <button id="settingsBtn" title="Settings">
-            <i data-lucide="settings"></i>
-        </button>
+        <button class="sidebar-btn" id="BgBtn" title="Background"><i data-lucide="image"></i></button>
+        <button class="sidebar-btn" id="alignBtn" title="Alignment"><i data-lucide="text-align-center"></i></button>
+        <button class="sidebar-btn" id="dataBtn" title="Data"><i data-lucide="database"></i></button>
+        <button id="toggleFolders" title="Display"><i id="toggleIcon" data-lucide="folder"></i></button>
+        <button id="settingsBtn" title="Settings"><i data-lucide="settings"></i></button>
     </div>
 </div>
 
+<!-- Menus -->
 <div id="settingsMenu" class="side-menu hidden">
     <div><strong>Folder alignment:</strong></div>
     <div class="align-option" data-align="left">Left</div>
@@ -196,7 +166,7 @@
 
 <div id="BgMenu" class="side-menu hidden">
     <div><strong>Change Background:</strong></div>
-    <input type="file" id="bgInput" accept="image/*">
+    <input type="file" id="bgInputMenu" accept="image/*">
 </div>
 
 <div id="dataMenu" class="side-menu hidden">
@@ -207,6 +177,6 @@
 </div>
 
 <script src="lucide.min.js"></script>
-<script src="script.js"></script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
