@@ -129,12 +129,12 @@
 <!-- Sidebar -->
 <div id="rightSidebar">
     <div class="sidebar-top">
-        <button class="sidebar-btn" title="SpeedTest"><i data-lucide="gauge"></i></button>
-        <button class="sidebar-btn" title="GitHub"><i data-lucide="github"></i></button>
-        <button class="sidebar-btn" title="WebSite Checker"><i data-lucide="signal"></i></button>
-        <button class="sidebar-btn" title="ReadList"><i data-lucide="book"></i></button>
-        <button class="sidebar-btn" title="WatchList"><i data-lucide="clapperboard"></i></button>
-        <button class="sidebar-btn" title="ShoppingList"><i data-lucide="shopping-basket"></i></button>
+        <button class="sidebar-btn" title="SpeedTest" id="speedTestBtn"><i data-lucide="gauge"></i></button>
+        <button class="sidebar-btn" title="Git" id="gitBtn"><i data-lucide="github"></i></button>
+        <button class="sidebar-btn" title="WebSite Checker" id="checkerBtn"><i data-lucide="signal"></i></button>
+        <button class="sidebar-btn" title="ReadList" id="readListBtn"><i data-lucide="book"></i></button>
+        <button class="sidebar-btn" title="WatchList" id="watchListBtn"><i data-lucide="clapperboard"></i></button>
+        <button class="sidebar-btn" title="ShoppingList" id="ShoppingListBtn"><i data-lucide="shopping-basket"></i></button>
     </div>
     <div class="sidebar-bottom">
         <button class="sidebar-btn" id="BgBtn" title="Background"><i data-lucide="image"></i></button>
@@ -174,6 +174,67 @@
     <button id="exportBtn" style="width:100%; margin-top:5px;">Export JSON</button>
     <button id="importBtn" style="width:100%; margin-top:5px;">Import JSON</button>
     <input type="file" id="importInput" accept=".json" class="hidden">
+</div>
+
+<div id="SpeedTestMenu" class="side-menu hidden">
+    <div class="menu-header">
+        <strong>SpeedTest</strong>
+    </div>
+    
+    <div class="speedtest-container">
+        <div class="speed-display">
+            <span id="speedValue">0.00</span>
+            <span class="unit">Mbps</span>
+        </div>
+
+        <div class="progress-bar-bg">
+            <div id="speedProgress" class="progress-bar-fill"></div>
+        </div>
+
+        <div class="test-details">
+            <small id="testStatus">Ready to test</small>
+        </div>
+
+        <button id="startSpeedTestBtn" class="primary-btn">
+            <span>START TEST</span>
+        </button>
+    </div>
+</div>
+
+<div id="gitMenu" class="side-menu hidden">
+    <div class="menu-header">
+        <strong>GitHub Repos</strong>
+        <i data-lucide="github"></i>
+    </div>
+
+    <div class="git-config">
+        <input type="text" id="githubUsernameInput" placeholder="Enter GitHub username..." 
+               style="width: 100%; margin-bottom: 10px; padding: 5px; border-radius: 4px; border: none; background: var(--nord1); color: var(--nord4);">
+    </div>
+    
+    <div id="repoList" class="repo-list">
+        <div class="loading-text">Enter a username above</div>
+    </div>
+
+    <div class="menu-footer">
+        <button id="saveGitUserBtn" class="primary-btn">Update & Save</button>
+    </div>
+</div>
+
+<div id="checkerMenu" class="side-menu hidden">
+    <div><strong>Website Checker</strong></div>
+</div>
+
+<div id="readListMenu" class="side-menu hidden">
+    <div><strong>Read List</strong></div>
+</div>
+
+<div id="watchListMenu" class="side-menu hidden">
+    <div><strong>Watchlist</strong></div>
+</div>
+
+<div id="shoppingListMenu" class="side-menu hidden">
+    <div><strong>Shopping List</strong></div>
 </div>
 
 <script src="lucide.min.js"></script>

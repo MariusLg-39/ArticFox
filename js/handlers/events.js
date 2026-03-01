@@ -9,6 +9,8 @@ import { Search } from '../ui/search.js';
 import { Sidebar } from '../ui/sidebar.js';
 import { Renderer } from '../ui/renderer.js';
 import { ImportExport } from './importexport.js';
+import { Network, GitHub } from '../utils.js';
+import { Storage } from '../storage.js';
 
 export const Events = {
     dom: {},
@@ -96,6 +98,12 @@ export const Events = {
         this.dom.dataBtn.onclick = (e) => { e.stopPropagation(); Sidebar.toggleMenu('data'); };
         this.dom.BgBtn.onclick = (e) => { e.stopPropagation(); Sidebar.toggleMenu('bg'); };
         this.dom.alignBtn.onclick = (e) => { e.stopPropagation(); Sidebar.toggleMenu('align'); };
+        this.dom.speedTestBtn.onclick = (e) => { e.stopPropagation(); Sidebar.toggleMenu('speedTest'); };
+        this.dom.gitBtn.onclick = (e) => { e.stopPropagation(); Sidebar.toggleMenu('git'); };
+        this.dom.checkerBtn.onclick = (e) => { e.stopPropagation(); Sidebar.toggleMenu('websiteChecker'); };
+        this.dom.readListBtn.onclick = (e) => { e.stopPropagation(); Sidebar.toggleMenu('readList'); };
+        this.dom.watchListBtn.onclick = (e) => { e.stopPropagation(); Sidebar.toggleMenu('watchList'); };
+        this.dom.ShoppingListBtn.onclick = (e) => { e.stopPropagation(); Sidebar.toggleMenu('shoppingList'); };
 
         // Alignment options
         document.querySelectorAll(".align-option").forEach(opt => {
@@ -114,6 +122,45 @@ export const Events = {
         document.getElementById("exportBtn").onclick = () => ImportExport.export();
         document.getElementById("importBtn").onclick = () => this.dom.importInput.click();
         this.dom.importInput.onchange = (e) => ImportExport.import(e.target.files[0]);
+
+        // start Speed test button
+        const startBtn = document.getElementById("startSpeedTestBtn");
+        if (startBtn) {
+            startBtn.onclick = (e) => {
+                e.stopPropagation();
+                this.handleSpeedTest(); // On appelle la logique de calcul
+            };
+        } else {
+            console.error("Le bouton startSpeedTestBtn n'a pas été trouvé dans le DOM !");
+        }
+        
+        //Github
+        // 1. Gestion de l'ouverture du menu GitHub
+        this.dom.gitBtn.onclick = (e) => {
+            e.stopPropagation();
+            Sidebar.toggleMenu('git');
+            
+            const currentUser = Storage.getGithubUser();
+            if (currentUser) {
+                this.loadGitHubData(currentUser);
+            }
+        };
+
+        // 2. Gestion du bouton de sauvegarde/mise à jour
+        const saveGitBtn = document.getElementById("saveGitUserBtn");
+        if (saveGitBtn) {
+            saveGitBtn.onclick = async (e) => {
+                e.stopPropagation();
+                const username = this.dom.githubUsernameInput.value.trim();
+                if (username) {
+                    saveGitBtn.innerText = "Loading...";
+                    Storage.saveGithubUser(username);
+                    await this.loadGitHubData(username);
+                    saveGitBtn.innerText = "Update & Save";
+                }
+            };
+        }
+
     },
 
     /**
@@ -166,5 +213,70 @@ export const Events = {
         Renderer.positionShortcuts();
     }
 });
+    },
+
+    async handleSpeedTest() {
+    // Récupération des éléments
+    const btn = document.getElementById("startSpeedTestBtn");
+    const speedDisplay = document.getElementById("speedValue"); // Le 0.00 bleu
+    const statusText = document.getElementById("testStatus");   // Le texte "Ready to test"
+    const progressBar = document.getElementById("speedProgress");
+
+    if (!btn) return;
+
+    // 1. État de chargement
+    btn.disabled = true;
+    btn.innerText = "TESTING...";
+    statusText.innerText = "Connecting to Cloudflare...";
+    if (progressBar) progressBar.style.width = "30%";
+
+    const testFile = "https://speed.cloudflare.com/__down?bytes=5000000"; 
+    
+    try {
+        const speed = await Network.measureDownloadSpeed(testFile);
+        
+        if (speed) {
+            // 2. Mise à jour du GROS chiffre bleu
+            let current = 0;
+            const target = parseFloat(speed);
+            const interval = setInterval(() => {
+                current += target / 20; // On monte en 20 étapes
+                if (current >= target) {
+                    speedDisplay.innerText = target.toFixed(2);
+                    clearInterval(interval);
+                } else {
+                    speedDisplay.innerText = current.toFixed(2);
+                }
+            }, 30);
+            
+            // 3. Mise à jour du statut et de la barre
+            statusText.innerText = "Test Complete";
+            if (progressBar) progressBar.style.width = "100%";
+            
+            // On laisse la vitesse sur le bouton aussi si tu veux
+            btn.innerText = "START TEST"; 
+        } else {
+            statusText.innerText = "Error: Timeout";
+            btn.innerText = "RETRY";
+        }
+    } catch (error) {
+        statusText.innerText = "Connection failed";
+        btn.innerText = "RETRY";
+    } finally {
+        btn.disabled = false;
     }
+    },
+
+    async loadGitHubData(username) {
+        // On utilise username (le pseudo saisi) ou celui du stockage
+        const targetUser = username || Storage.getGithubUser();
+        
+        if (!targetUser) {
+            console.log("Aucun utilisateur GitHub configuré");
+            return;
+        }
+
+        const repos = await GitHub.fetchRepos(targetUser);
+        Renderer.renderGitRepos(repos);
+    },
 };

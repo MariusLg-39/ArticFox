@@ -18,7 +18,13 @@ export const Sidebar = {
             { menu: this.dom.settingsMenu, btn: this.dom.settingsBtn },
             { menu: this.dom.dataMenu, btn: this.dom.dataBtn },
             { menu: this.dom.BgMenu, btn: this.dom.BgBtn },
-            { menu: this.dom.alignMenu, btn: this.dom.alignBtn }
+            { menu: this.dom.alignMenu, btn: this.dom.alignBtn },
+            { menu: this.dom.SpeedTestMenu, btn: this.dom.speedTestBtn },
+            { menu: this.dom.gitMenu, btn: this.dom.gitBtn },
+            { menu: this.dom.checkerMenu, btn: this.dom.checkerBtn },
+            { menu: this.dom.readListMenu, btn: this.dom.readListBtn },
+            { menu: this.dom.watchListMenu, btn: this.dom.watchListBtn },
+            { menu: this.dom.shoppingListMenu, btn: this.dom.ShoppingListBtn }
         ];
     },
 
@@ -39,7 +45,13 @@ export const Sidebar = {
             settings: { menu: this.dom.settingsMenu, btn: this.dom.settingsBtn },
             data: { menu: this.dom.dataMenu, btn: this.dom.dataBtn },
             bg: { menu: this.dom.BgMenu, btn: this.dom.BgBtn },
-            align: { menu: this.dom.alignMenu, btn: this.dom.alignBtn }
+            align: { menu: this.dom.alignMenu, btn: this.dom.alignBtn },
+            speedTest: { menu: this.dom.SpeedTestMenu, btn: this.dom.speedTestBtn },
+            git: { menu: this.dom.gitMenu, btn: this.dom.gitBtn },
+            websiteChecker: { menu: this.dom.checkerMenu, btn: this.dom.checkerBtn },
+            readList: { menu: this.dom.readListMenu, btn: this.dom.readListBtn },
+            watchList: { menu: this.dom.watchListMenu, btn: this.dom.watchListBtn },
+            shoppingList: { menu: this.dom.shoppingListMenu, btn: this.dom.ShoppingListBtn }
         };
 
         const target = config[menuKey];

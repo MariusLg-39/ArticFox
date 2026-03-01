@@ -196,5 +196,28 @@ export const Renderer = {
             this.shortcuts(folder);
             this.dom.shortcutsList.classList.remove("switching");
         }, 150);
+    },
+
+    renderGitRepos(repos) {
+    const container = document.getElementById("repoList");
+    if (!container) return;
+
+    if (!repos || repos.length === 0) {
+        container.innerHTML = "<div class='error'>Impossible de charger les dépôts.</div>";
+        return;
     }
+
+    container.innerHTML = repos.map(repo => `
+        <a href="${repo.url}" target="_blank" class="repo-item">
+            <div class="repo-name">${repo.name}</div>
+            <div class="repo-meta">
+                <span class="repo-lang">${repo.language || 'Plain'}</span>
+                <span class="repo-stars">⭐ ${repo.stars}</span>
+            </div>
+        </a>
+    `).join('');
+    
+    // Ré-initialiser les icônes Lucide si nécessaire
+    if (window.lucide) lucide.createIcons();
+    },
 };

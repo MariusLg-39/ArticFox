@@ -55,7 +55,7 @@ const DOM = {
     editFolderIconSection: document.getElementById("editFolderIconSection"),
     editShortcutSection: document.getElementById("editShortcutSection"),
     
-    // Sidebar buttons
+    // Sidebar buttons & Menus
     settingsBtn: document.getElementById("settingsBtn"),
     settingsMenu: document.getElementById("settingsMenu"),
     dataBtn: document.getElementById("dataBtn"),
@@ -67,7 +67,29 @@ const DOM = {
     toggleBtn: document.getElementById("toggleFolders"),
     bgInput: document.getElementById("bgInput"),
     bgInputMenu: document.getElementById("bgInputMenu"),
-    importInput: document.getElementById("importInput")
+    importInput: document.getElementById("importInput"),
+    
+    // SpeedTest
+    speedTestBtn: document.getElementById('speedTestBtn'),
+    SpeedTestMenu: document.getElementById('SpeedTestMenu'),
+    speedValue: document.getElementById("speedValue"),
+    speedProgress: document.getElementById("speedProgress"),
+    testStatus: document.getElementById("testStatus"),
+
+    // GitHub (Correction de la casse ici : gitMenu doit correspondre à l'ID HTML)
+    gitBtn: document.getElementById('gitBtn'),
+    gitMenu: document.getElementById('gitMenu'), 
+    githubUsernameInput: document.getElementById("githubUsernameInput"),
+
+    // Autres menus
+    checkerBtn: document.getElementById('checkerBtn'),
+    checkerMenu: document.getElementById('checkerMenu'),
+    readListBtn: document.getElementById('readListBtn'),
+    readListMenu: document.getElementById('readListMenu'),
+    watchListBtn: document.getElementById('watchListBtn'),
+    watchListMenu: document.getElementById('watchListMenu'),
+    ShoppingListBtn: document.getElementById('ShoppingListBtn'),
+    shoppingListMenu: document.getElementById('shoppingListMenu')
 };
 
 /**

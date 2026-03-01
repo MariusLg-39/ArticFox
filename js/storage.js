@@ -96,5 +96,13 @@ export const Storage = {
         } catch (err) {
             throw err;
         }
+    },
+
+    saveGithubUser(username) {
+        localStorage.setItem('articfox_github_user', username);
+    },
+
+    getGithubUser() {
+        return localStorage.getItem('articfox_github_user') || "";
     }
 };

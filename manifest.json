@@ -10,7 +10,8 @@
     "default_popup": "index.html"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "https://speed.cloudflare.com/*"
   ],
   "host_permissions": [
     "https://suggestqueries.google.com/*"
