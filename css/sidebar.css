@@ -260,3 +260,97 @@
     justify-content: space-between;
     opacity: 0.8;
 }
+
+.checker-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background: var(--nord2);
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.status-dot.checking { background: var(--nord4); animation: pulse 1s infinite; }
+.status-dot.online { background: #a3be8c; } /* Vert Nord */
+.status-dot.offline { background: #bf616a; } /* Rouge Nord */
+
+.site-url { flex-grow: 1; font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; }
+
+.delete-checker { background: none; border: none; color: var(--nord11); cursor: pointer; font-weight: bold; }
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+/* Conteneur de liste pour Reading/Watch/Shopping */
+.list-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 15px;
+    padding-right: 5px;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: var(--nord2);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.list-item:hover {
+    background: var(--nord1);
+    border-left-color: var(--nord8);
+    transform: translateX(4px);
+}
+
+.list-item a {
+    text-decoration: none;
+    flex-grow: 1;
+    margin-right: 10px;
+    overflow: hidden;
+}
+
+.item-title {
+    color: var(--nord4);
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-meta {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--nord9); /* Bleu givré */
+    margin-top: 3px;
+}
+
+.delete-item {
+    background: none;
+    border: none;
+    color: var(--nord11); /* Rouge Nord */
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 5px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.list-item:hover .delete-item {
+    opacity: 1;
+}

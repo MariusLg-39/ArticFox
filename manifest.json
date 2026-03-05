@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "ArticFox Extension",
-  "version": "1.8",
+  "version": "1.9",
   "description": "ArticFox Home Page for Firefox",
   "chrome_url_overrides": {
     "newtab": "index.html"
@@ -11,13 +11,16 @@
   },
   "permissions": [
     "storage",
-    "https://speed.cloudflare.com/*"
+    "https://speed.cloudflare.com/*",
+    "contextMenus",
+    "tabs"
   ],
   "host_permissions": [
     "https://suggestqueries.google.com/*"
 ],
   "background": {
-    "scripts": ["script.js"]
+    "scripts": ["script.js"],
+    "service_worker": "background.js"
   },
   "icons": {
     "128": "icon.png"

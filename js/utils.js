@@ -95,6 +95,20 @@ export const Network = {
             console.error("SpeedTest échoué:", error);
             return null;
         }
+    },
+
+    async checkStatus(url) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // Timeout après 5s
+
+            // On utilise 'no-cors' pour éviter les blocages de sécurité
+            await fetch(url, { mode: 'no-cors', signal: controller.signal });
+            clearTimeout(timeoutId);
+            return "online";
+        } catch (error) {
+            return "offline";
+        }
     }
 };
 

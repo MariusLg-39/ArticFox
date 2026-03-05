@@ -220,4 +220,46 @@ export const Renderer = {
     // Ré-initialiser les icônes Lucide si nécessaire
     if (window.lucide) lucide.createIcons();
     },
+
+    // Dans renderer.js
+    renderCheckerList(sites, statuses = {}) {
+        const container = document.getElementById("checkerList");
+        if (!container) return;
+
+        if (sites.length === 0) {
+            container.innerHTML = "<div class='empty-text'>No websites tracked</div>";
+            return;
+        }
+
+        container.innerHTML = sites.map(site => {
+            const status = statuses[site] || 'checking';
+            return `
+                <div class="checker-item">
+                    <div class="status-dot ${status}"></div>
+                    <span class="site-url">${new URL(site).hostname}</span>
+                    <button class="delete-checker" data-url="${site}">×</button>
+                </div>
+            `;
+        }).join('');
+    },
+
+    renderGenericList(containerId, data, type) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        if (!data || data.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--nord3)">Empty list</div>`;
+            return;
+        }
+
+        container.innerHTML = data.map((item, index) => `
+            <div class="list-item">
+                <a href="${item.url}" target="_blank">
+                    <div class="item-title">${item.title}</div>
+                    <span class="item-meta">${new URL(item.url).hostname} • ${item.date}</span>
+                </a>
+                <button class="delete-item" data-type="${type}" data-index="${index}">×</button>
+            </div>
+        `).join('');
+    },
 };

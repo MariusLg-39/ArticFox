@@ -222,19 +222,34 @@
 </div>
 
 <div id="checkerMenu" class="side-menu hidden">
-    <div><strong>Website Checker</strong></div>
+    <div class="menu-header">
+        <strong>Website Checker</strong>
+        <i data-lucide="activity"></i>
+    </div>
+
+    <div class="checker-config">
+        <input type="url" id="checkerUrlInput" placeholder="https://example.com" 
+               style="width: 100%; margin-bottom: 5px; padding: 8px; border-radius: 4px; border: none; background: var(--nord1); color: var(--nord4);">
+        <button id="addCheckerBtn" class="primary-btn" style="margin-bottom: 15px;">Add Website</button>
+    </div>
+    
+    <div id="checkerList" class="checker-list">
+        </div>
 </div>
 
 <div id="readListMenu" class="side-menu hidden">
-    <div><strong>Read List</strong></div>
+    <div class="menu-header"><strong>Reading List</strong></div>
+    <div id="readListContent" class="list-container"></div>
 </div>
 
 <div id="watchListMenu" class="side-menu hidden">
-    <div><strong>Watchlist</strong></div>
+    <div class="menu-header"><strong>WatchList</strong></div>
+    <div id="watchListContent" class="list-container"></div>
 </div>
 
 <div id="shoppingListMenu" class="side-menu hidden">
-    <div><strong>Shopping List</strong></div>
+    <div class="menu-header"><strong>Shopping List</strong></div>
+    <div id="shoppingListContent" class="list-container"></div>
 </div>
 
 <script src="lucide.min.js"></script>

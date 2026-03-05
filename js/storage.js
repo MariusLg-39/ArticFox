@@ -104,5 +104,26 @@ export const Storage = {
 
     getGithubUser() {
         return localStorage.getItem('articfox_github_user') || "";
+    },
+
+    saveChecklist(sites) {
+        localStorage.setItem('articfox_checker_list', JSON.stringify(sites));
+    },
+
+    getChecklist() {
+        const list = localStorage.getItem('articfox_checker_list');
+        return list ? JSON.parse(list) : [];
+    },
+
+    async getList(type) {
+        return new Promise((resolve) => {
+            chrome.storage.local.get([`articfox_${type}_list`], (res) => {
+                resolve(res[`articfox_${type}_list`] || []);
+            });
+        });
+    },
+
+    saveList(type, data) {
+        chrome.storage.local.set({ [`articfox_${type}_list`]: data });
     }
 };
